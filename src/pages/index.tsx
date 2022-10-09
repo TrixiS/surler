@@ -6,11 +6,19 @@ import type {
   NextPage,
 } from "next";
 import Head from "next/head";
+import { prisma } from "../server/db/client";
+import { userIdCookieKey } from "../utils/constants";
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
 ) => {
+  const urlCreateMutation = trpc.url.create.useMutation();
+
+  const handleClick = () => {
+    urlCreateMutation.mutate({ name: "text", url: "https://google.com" });
+  };
+
   return (
     <>
       <Head>
@@ -21,6 +29,9 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 
       <main className="container mx-auto flex min-h-screen flex-col items-center p-4">
         Your user ID is {props.userId}
+        <button className="btn" onClick={handleClick}>
+          Add url
+        </button>
       </main>
     </>
   );
@@ -29,15 +40,15 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 export const getServerSideProps: GetServerSideProps<{
   userId: string;
 }> = async ({ req, res }) => {
-  const userIdKey = "userId";
-
-  if (req.cookies[userIdKey]) {
-    return { props: { userId: req.cookies[userIdKey] } };
+  if (req.cookies[userIdCookieKey]) {
+    return { props: { userId: req.cookies[userIdCookieKey] } };
   }
 
   const userId = await nanoid();
+  await prisma.user.create({ data: { id: userId } });
+
   const cookies = new Cookies(req, res);
-  cookies.set(userIdKey, userId, { httpOnly: true, expires: undefined });
+  cookies.set(userIdCookieKey, userId, { httpOnly: true, expires: undefined });
 
   return { props: { userId } };
 };

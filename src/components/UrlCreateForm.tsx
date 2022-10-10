@@ -75,7 +75,7 @@ export const UrlCreateForm: React.FC = () => {
         <div className="flex w-full flex-col md:w-4/6">
           <input
             {...register("url")}
-            className="input rounded-none bg-transparent focus:outline-none"
+            className="input rounded-none bg-transparent px-1 focus:outline-none"
             placeholder="https://"
           />
           {errors.url?.message && <ErrorLabel message={errors.url.message} />}
@@ -83,7 +83,7 @@ export const UrlCreateForm: React.FC = () => {
         <div className="mb-2 flex w-full flex-col md:mb-0 md:w-2/6">
           <input
             {...register("name")}
-            className="input rounded-none bg-transparent focus:outline-none"
+            className="input rounded-none bg-transparent px-1 focus:outline-none"
             placeholder="Enter name"
           />
           {errors.name?.message && <ErrorLabel message={errors.name.message} />}

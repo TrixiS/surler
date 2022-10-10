@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.8",
     "@prisma/client": "^4.4.0",
     "@tanstack/react-query": "^4.10.0",
     "@trpc/client": "10.0.0-proxy-beta.15",
@@ -22,6 +23,7 @@
     "next": "12.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.37.0",
     "superjson": "1.9.1",
     "zod": "^3.18.0"
   },

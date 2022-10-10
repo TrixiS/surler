@@ -1,6 +1,7 @@
 import { t } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { urlInputSchema } from "../../../utils/validation";
 
 const userMiddleware = t.middleware(async ({ ctx, next }) => {
   const unauthorizedError = new TRPCError({ code: "UNAUTHORIZED" });
@@ -24,7 +25,7 @@ const userMiddleware = t.middleware(async ({ ctx, next }) => {
 export const urlRouter = t.router({
   create: t.procedure
     .use(userMiddleware)
-    .input(z.object({ name: z.string(), url: z.string().url() }))
+    .input(urlInputSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const url = await ctx.prisma.url.create({
@@ -33,8 +34,11 @@ export const urlRouter = t.router({
 
         return url;
       } catch (e) {
-        console.error(e);
-        throw new TRPCError({ code: "CONFLICT" });
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "This name is already registered",
+          cause: "name",
+        });
       }
     }),
 });

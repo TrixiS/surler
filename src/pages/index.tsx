@@ -6,9 +6,9 @@ import type {
   NextPage,
 } from "next";
 import Head from "next/head";
+import { UrlCreateForm } from "../components/UrlCreateForm";
 import { prisma } from "../server/db/client";
 import { userIdCookieKey } from "../utils/constants";
-import { UrlCreateForm } from "../components/UrlCreateForm";
 
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
@@ -28,8 +28,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="">
-        Your user ID is {props.userId}
+      <main>
         <UrlCreateForm />
       </main>
     </div>

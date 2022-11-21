@@ -1,14 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { trpc } from "../utils/trpc";
 import { urlInputSchema } from "../utils/validation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 
 type UrlFormData = z.infer<typeof urlInputSchema>;
 
 const ErrorLabel: React.FC<{ message: string }> = ({ message }) => {
   return (
-    <label className="mx-4 text-start text-xs text-red-500">{message}</label>
+    <label className="pl-1 text-start text-xs text-red-500">{message}</label>
   );
 };
 
@@ -67,7 +67,7 @@ export const UrlCreateForm: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full flex-col rounded-xl bg-base-200 p-2">
+    <div className="flex w-full flex-col rounded-xl border-2 border-base-300 bg-base-200 p-2">
       <form
         onSubmit={handleSubmitWrapper(handleSubmit as any)}
         className="flex w-full flex-col md:flex-row"

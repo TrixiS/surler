@@ -7,6 +7,7 @@ import type {
 } from "next";
 import Head from "next/head";
 import { UrlCreateForm } from "../components/UrlCreateForm";
+import { UrlTable } from "../components/UrlTable";
 import { prisma } from "../server/db/client";
 import { userIdCookieKey } from "../utils/constants";
 
@@ -14,22 +15,19 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
 ) => {
   return (
-    <div
-      style={{
-        maxWidth: "1280px",
-        margin: "0 auto",
-        padding: "2rem",
-        textAlign: "center",
-      }}
-    >
+    <div className="mx-auto max-w-[1280px] p-[2rem]">
       <Head>
         <title>Surler</title>
         <meta name="description" content="Simple url shortener application" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <main className="flex flex-col gap-y-4">
+        <nav className="flex flex-row text-4xl font-bold leading-tight">
+          Surler
+        </nav>
         <UrlCreateForm />
+        <UrlTable />
       </main>
     </div>
   );

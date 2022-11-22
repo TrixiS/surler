@@ -67,7 +67,7 @@ export const UrlCreateForm: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full flex-col rounded-xl border-2 border-base-300 bg-base-200 p-2">
+    <div className="flex w-full flex-col rounded-xl border-2 border-zinc-700 bg-zinc-800 p-2">
       <form
         onSubmit={handleSubmitWrapper(handleSubmit as any)}
         className="flex w-full flex-col md:flex-row"

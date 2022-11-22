@@ -45,7 +45,9 @@ export const urlRouter = t.router({
       }
     }),
   getAll: t.procedure.use(userMiddleware).query(async ({ ctx }) => {
-    const urls = await ctx.prisma.url.findMany();
+    const urls = await ctx.prisma.url.findMany({
+      where: { userId: ctx.user.id },
+    });
     return urls;
   }),
 });

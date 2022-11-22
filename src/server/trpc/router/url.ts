@@ -1,7 +1,6 @@
-import { t } from "../trpc";
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { urlInputSchema } from "../../../utils/validation";
+import { t } from "../trpc";
 
 const userMiddleware = t.middleware(async ({ ctx, next }) => {
   const unauthorizedError = new TRPCError({ code: "UNAUTHORIZED" });
@@ -29,7 +28,11 @@ export const urlRouter = t.router({
     .mutation(async ({ input, ctx }) => {
       try {
         const url = await ctx.prisma.url.create({
-          data: { id: input.name, sourceUrl: input.url, userId: ctx.user.id },
+          data: {
+            sourceUrl: input.url,
+            userId: ctx.user.id,
+            name: input.name,
+          },
         });
 
         return url;
@@ -41,4 +44,8 @@ export const urlRouter = t.router({
         });
       }
     }),
+  getAll: t.procedure.use(userMiddleware).query(async ({ ctx }) => {
+    const urls = await ctx.prisma.url.findMany();
+    return urls;
+  }),
 });

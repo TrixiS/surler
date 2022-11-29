@@ -6,19 +6,18 @@ const UrlPage: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const urlName = ctx.params?.name;
+  const homeRedirect = {
+    redirect: { destination: "/", permanent: false },
+  };
 
   if (!urlName || Array.isArray(urlName)) {
-    return {
-      redirect: { destination: "/", permanent: false },
-    };
+    return homeRedirect;
   }
 
   const url = await prisma.url.findFirst({ where: { name: urlName } });
 
-  if (!url) {
-    return {
-      redirect: { destination: "/", permanent: false },
-    };
+  if (!url?.enabled) {
+    return homeRedirect;
   }
 
   await prisma.url.update({

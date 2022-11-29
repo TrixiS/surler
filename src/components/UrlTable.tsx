@@ -4,7 +4,6 @@ import { trpc } from "../utils/trpc";
 import { CheckMarkIcon } from "./svg";
 
 const createUrlHref = (urlName: string) => {
-  console.log(urlName, window.location.host);
   const url = new URL(`./url/${urlName}`, window.location.href);
   return url.href;
 };
@@ -52,6 +51,21 @@ const CopyUrlButton: React.FC<{ url: Url }> = ({ url }) => {
         d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
       />
     </svg>
+  );
+};
+
+const UrlToggleButton: React.FC<{ url: Url }> = ({ url }) => {
+  const toggleUrlMutation = trpc.url.toggle.useMutation();
+  const isEnabled = toggleUrlMutation.data?.enabled ?? url.enabled;
+
+  const handleChange = () => toggleUrlMutation.mutate({ urlName: url.name });
+
+  return (
+    <label className="swap">
+      <input type="checkbox" checked={isEnabled} onChange={handleChange} />
+      <div className="swap-on">ON</div>
+      <div className="swap-off">OFF</div>
+    </label>
   );
 };
 
@@ -104,8 +118,6 @@ export const UrlTable: React.FC = () => {
         <tbody className="flex flex-col divide-y divide-dashed divide-zinc-700">
           {data.map((url) => (
             <tr className="inline-flex p-4 font-normal">
-              {/* TODO: sep component for copy button */}
-              {/* TODO: handle clicks */}
               {/* TODO: on/off */}
               <td className="text-normal flex w-full flex-col place-items-center">
                 <CopyUrlButton url={url} />
@@ -122,12 +134,7 @@ export const UrlTable: React.FC = () => {
                 {url.clickCount}
               </td>
               <td className="flex w-full flex-col place-items-center">
-                {/* TODO: handle swap change */}
-                <label className="swap">
-                  <input type="checkbox" defaultChecked={url.enabled} />
-                  <div className="swap-on">ON</div>
-                  <div className="swap-off">OFF</div>
-                </label>
+                <UrlToggleButton url={url} />
               </td>
             </tr>
           ))}

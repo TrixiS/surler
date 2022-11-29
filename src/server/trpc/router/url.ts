@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 import { urlInputSchema } from "../../../utils/validation";
 import { t } from "../trpc";
 
@@ -48,6 +49,22 @@ export const urlRouter = t.router({
     const urls = await ctx.prisma.url.findMany({
       where: { userId: ctx.user.id },
     });
+
     return urls;
   }),
+  toggle: t.procedure
+    .use(userMiddleware)
+    .input(z.object({ urlName: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const url = await ctx.prisma.url.findFirstOrThrow({
+        where: { name: input.urlName },
+      });
+
+      const updatedUrl = await prisma.url.update({
+        where: { name: url.name },
+        data: { enabled: !url.enabled },
+      });
+
+      return updatedUrl;
+    }),
 });

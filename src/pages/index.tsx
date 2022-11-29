@@ -23,7 +23,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       </Head>
 
       <main className="flex flex-col gap-y-4">
-        <nav className="flex flex-row text-4xl font-bold leading-tight">
+        <nav className="flex flex-row text-4xl font-extrabold uppercase text-primary">
           Surler
         </nav>
         <UrlCreateForm />

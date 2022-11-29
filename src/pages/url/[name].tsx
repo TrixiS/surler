@@ -15,8 +15,19 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const url = await prisma.url.findFirst({ where: { name: urlName } });
 
+  if (!url) {
+    return {
+      redirect: { destination: "/", permanent: false },
+    };
+  }
+
+  await prisma.url.update({
+    where: { name: url.name },
+    data: { clickCount: { increment: 1 } },
+  });
+
   return {
-    redirect: { destination: url ? url.sourceUrl : "/", permanent: false },
+    redirect: { destination: url.sourceUrl, permanent: false },
   };
 };
 

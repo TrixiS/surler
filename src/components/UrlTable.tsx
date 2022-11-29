@@ -1,5 +1,7 @@
 import { Url } from "@prisma/client";
+import { useState } from "react";
 import { trpc } from "../utils/trpc";
+import { CheckMarkIcon } from "./svg";
 
 const createUrlHref = (urlName: string) => {
   console.log(urlName, window.location.host);
@@ -20,7 +22,16 @@ const Placeholder: React.FC<{ icon: React.ReactNode; message: string }> = ({
 };
 
 const CopyUrlButton: React.FC<{ url: Url }> = ({ url }) => {
+  const [isCopied, setIsCopied] = useState(false);
   const href = createUrlHref(url.name);
+
+  if (isCopied) {
+    return (
+      <span className="text-primary">
+        <CheckMarkIcon />
+      </span>
+    );
+  }
 
   return (
     <svg
@@ -32,6 +43,7 @@ const CopyUrlButton: React.FC<{ url: Url }> = ({ url }) => {
       className="h-6 w-6 hover:cursor-pointer hover:text-primary"
       onClick={() => {
         navigator.clipboard.writeText(href);
+        setIsCopied(true);
       }}
     >
       <path

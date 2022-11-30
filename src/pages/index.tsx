@@ -6,14 +6,22 @@ import type {
   NextPage,
 } from "next";
 import Head from "next/head";
+import { LoadingPlaceholder } from "../components/Placeholders";
 import { UrlCreateForm } from "../components/UrlCreateForm";
 import { UrlTable } from "../components/UrlTable";
 import { prisma } from "../server/db/client";
 import { userIdCookieKey } from "../utils/constants";
+import { trpc } from "../utils/trpc";
 
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
 ) => {
+  const { isLoading, data, refetch } = trpc.url.getAll.useQuery();
+
+  const handleUrlCreate = () => {
+    refetch();
+  };
+
   return (
     <div className="mx-auto max-w-[1280px] p-[2rem]">
       <Head>
@@ -26,8 +34,8 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         <nav className="flex flex-row text-4xl font-extrabold uppercase text-primary">
           Surler
         </nav>
-        <UrlCreateForm />
-        <UrlTable />
+        <UrlCreateForm onCreate={handleUrlCreate} />
+        {isLoading ? <LoadingPlaceholder /> : <UrlTable urls={data!} />}
       </main>
     </div>
   );

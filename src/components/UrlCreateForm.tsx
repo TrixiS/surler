@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Url } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { trpc } from "../utils/trpc";
 import { urlInputSchema } from "../utils/validation";
-import { CheckMarkIcon } from "./svg";
+import { CheckMarkIcon } from "./Icons";
 
 type UrlFormData = z.infer<typeof urlInputSchema>;
 
@@ -34,7 +35,9 @@ const UrlFormSubmitButton: React.FC<{
   );
 };
 
-export const UrlCreateForm: React.FC = () => {
+export const UrlCreateForm: React.FC<{ onCreate: (url: Url) => any }> = ({
+  onCreate,
+}) => {
   const {
     register,
     handleSubmit: handleSubmitWrapper,
@@ -46,7 +49,8 @@ export const UrlCreateForm: React.FC = () => {
 
   const handleSubmit = async (data: UrlFormData) => {
     try {
-      await urlCreateMutation.mutateAsync(data);
+      const url = await urlCreateMutation.mutateAsync(data);
+      onCreate(url);
     } catch (e: any) {
       if (e.meta.response.status === 409) {
         setError("name", { message: e.message });

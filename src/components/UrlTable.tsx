@@ -9,6 +9,11 @@ const createUrlHref = (urlName: string) => {
   return url.href;
 };
 
+const wrapHref = (href: string) => {
+  const url = new URL(href);
+  return url.host;
+};
+
 const NoUrlsPlaceholder = () => {
   return (
     <Placeholder
@@ -75,42 +80,40 @@ const UrlToggleButton: React.FC<{ url: Url }> = ({ url }) => {
   return (
     <label className="swap">
       <input type="checkbox" checked={isEnabled} onChange={handleChange} />
-      <div className="swap-on">ON</div>
-      <div className="swap-off">OFF</div>
+      <div className="swap-on -mb-1">ON</div>
+      <div className="swap-off -mb-1">OFF</div>
     </label>
   );
 };
 
 export const UrlTable: React.FC<{ urls: Url[] }> = ({ urls }) => {
   return (
-    <table className="flex w-full flex-col rounded-xl border-2 border-zinc-700 bg-zinc-800">
-      {urls.length > 0 ? (
-        <tbody className="flex flex-col divide-y divide-dashed divide-zinc-700">
-          {urls.map((url) => (
-            <tr className="inline-flex p-4 font-normal">
-              <td className="text-normal flex w-full flex-col place-items-center">
-                <CopyUrlButton url={url} />
-              </td>
-              <td className="flex w-full flex-col place-items-center text-white">
-                {url.name}
-              </td>
-              <td className="flex w-full flex-col place-items-center">
-                <a className="hover:underline" href={url.sourceUrl}>
-                  {url.sourceUrl}
-                </a>
-              </td>
-              <td className="flex w-full flex-col place-items-center">
-                {url.clickCount}
-              </td>
-              <td className="flex w-full flex-col place-items-center">
-                <UrlToggleButton url={url} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      ) : (
-        <NoUrlsPlaceholder />
-      )}
-    </table>
+    <div className="flex w-full flex-col overflow-auto rounded-xl border-2 border-zinc-700 bg-zinc-800 p-1">
+      <table className="table-auto">
+        {urls.length > 0 ? (
+          <tbody className="w-full divide-y divide-dashed divide-zinc-700">
+            {urls.map((url) => (
+              <tr>
+                <td className="p-4">
+                  <CopyUrlButton url={url} />
+                </td>
+                <td className="p-4 text-white">{url.name}</td>
+                <td>
+                  <a className="p-4 hover:underline" href={url.sourceUrl}>
+                    {wrapHref(url.sourceUrl)}
+                  </a>
+                </td>
+                <td className="p-4">{url.clickCount}</td>
+                <td className="p-4">
+                  <UrlToggleButton url={url} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        ) : (
+          <NoUrlsPlaceholder />
+        )}
+      </table>
+    </div>
   );
 };

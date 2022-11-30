@@ -61,7 +61,7 @@ export const UrlCreateForm: React.FC<{ onCreate: (url: Url) => any }> = ({
   return (
     <div className="flex w-full flex-col rounded-xl border-2 border-zinc-700 bg-zinc-800 p-2">
       <form
-        onSubmit={handleSubmitWrapper(handleSubmit as any)}
+        onSubmit={handleSubmitWrapper(handleSubmit)}
         className="flex w-full flex-col md:flex-row"
       >
         <div className="flex w-full flex-col md:w-4/6">

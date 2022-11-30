@@ -49,6 +49,17 @@ const CopyUrlButton: React.FC<{ url: Url }> = ({ url }) => {
     );
   }
 
+  const handleClick = () => {
+    navigator.clipboard.writeText(href);
+    setIsCopied(true);
+
+    const isCopiedExpirationTimeoutMs = 5000;
+
+    setTimeout(() => {
+      setIsCopied(false);
+    }, isCopiedExpirationTimeoutMs);
+  };
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -57,10 +68,7 @@ const CopyUrlButton: React.FC<{ url: Url }> = ({ url }) => {
       strokeWidth={1.5}
       stroke="currentColor"
       className="h-6 w-6 hover:cursor-pointer hover:text-primary"
-      onClick={() => {
-        navigator.clipboard.writeText(href);
-        setIsCopied(true);
-      }}
+      onClick={handleClick}
     >
       <path
         strokeLinecap="round"

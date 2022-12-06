@@ -21,25 +21,26 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   const refetchUrls = () => refetch();
 
   return (
-    <div className="mx-auto max-w-[1280px] p-[2rem]">
+    <>
       <Head>
         <title>Surler</title>
         <meta name="description" content="Simple url shortener application" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className="flex flex-col gap-y-4">
-        <nav className="flex flex-row text-4xl font-extrabold uppercase text-primary">
-          Surler
+      <div className="relative z-50 mx-auto max-w-[1280px]">
+        <nav className="flex flex-row px-[2rem] py-4">
+          <span className="text-4xl font-extrabold text-white">surler</span>
         </nav>
-        <UrlCreateForm onCreate={refetchUrls} />
-        {isLoading ? (
-          <LoadingPlaceholder />
-        ) : (
-          <UrlTable urls={data!} onRemove={refetchUrls} />
-        )}
-      </main>
-    </div>
+        <main className="flex flex-col gap-y-4  p-[2rem]">
+          <UrlCreateForm onCreate={refetchUrls} />
+          {isLoading ? (
+            <LoadingPlaceholder />
+          ) : (
+            <UrlTable urls={data!} onRemove={refetchUrls} />
+          )}
+        </main>
+      </div>
+    </>
   );
 };
 

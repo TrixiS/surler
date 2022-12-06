@@ -67,4 +67,14 @@ export const urlRouter = t.router({
 
       return updatedUrl;
     }),
+  remove: t.procedure
+    .use(userMiddleware)
+    .input(z.object({ urlName: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const payload = await ctx.prisma.url.deleteMany({
+        where: { userId: ctx.user.id, name: input.urlName },
+      });
+
+      return payload.count > 0;
+    }),
 });

@@ -4,6 +4,9 @@ import { trpc } from "../utils/trpc";
 import { CheckMarkIcon } from "./Icons";
 import { Placeholder } from "./Placeholders";
 
+// TODO: remove url button
+type OnRemoveCallback = (url: Url) => any;
+
 const createUrlHref = (urlName: string) => {
   const url = new URL(`./url/${urlName}`, window.location.href);
   return url.href;
@@ -79,6 +82,36 @@ const CopyUrlButton: React.FC<{ url: Url }> = ({ url }) => {
   );
 };
 
+export const RemoveUrlButton: React.FC<{
+  url: Url;
+  onRemove: OnRemoveCallback;
+}> = ({ url, onRemove }) => {
+  const removeUrlMutation = trpc.url.remove.useMutation();
+
+  const handleClick = async () => {
+    await removeUrlMutation.mutateAsync({ urlName: url.name });
+    onRemove(url);
+  };
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className="h-6 w-6 hover:text-red-600"
+      onClick={handleClick}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+      />
+    </svg>
+  );
+};
+
 const UrlToggleButton: React.FC<{ url: Url }> = ({ url }) => {
   const toggleUrlMutation = trpc.url.toggle.useMutation();
   const isEnabled = toggleUrlMutation.data?.enabled ?? url.enabled;
@@ -94,7 +127,10 @@ const UrlToggleButton: React.FC<{ url: Url }> = ({ url }) => {
   );
 };
 
-export const UrlTable: React.FC<{ urls: Url[] }> = ({ urls }) => {
+export const UrlTable: React.FC<{
+  urls: Url[];
+  onRemove: OnRemoveCallback;
+}> = ({ urls, onRemove }) => {
   return (
     <div className="flex w-full flex-col overflow-auto rounded-xl border-2 border-zinc-700 bg-zinc-800 p-1">
       <table className="table-auto">
@@ -103,7 +139,10 @@ export const UrlTable: React.FC<{ urls: Url[] }> = ({ urls }) => {
             {urls.map((url) => (
               <tr>
                 <td className="p-4">
-                  <CopyUrlButton url={url} />
+                  <div className="flex flex-row gap-x-2">
+                    <CopyUrlButton url={url} />
+                    <RemoveUrlButton url={url} onRemove={onRemove} />
+                  </div>
                 </td>
                 <td className="p-4 text-white">{url.name}</td>
                 <td>

@@ -18,9 +18,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
 ) => {
   const { isLoading, data, refetch } = trpc.url.getAll.useQuery();
 
-  const handleUrlCreate = () => {
-    refetch();
-  };
+  const refetchUrls = () => refetch();
 
   return (
     <div className="mx-auto max-w-[1280px] p-[2rem]">
@@ -34,8 +32,12 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         <nav className="flex flex-row text-4xl font-extrabold uppercase text-primary">
           Surler
         </nav>
-        <UrlCreateForm onCreate={handleUrlCreate} />
-        {isLoading ? <LoadingPlaceholder /> : <UrlTable urls={data!} />}
+        <UrlCreateForm onCreate={refetchUrls} />
+        {isLoading ? (
+          <LoadingPlaceholder />
+        ) : (
+          <UrlTable urls={data!} onRemove={refetchUrls} />
+        )}
       </main>
     </div>
   );
